@@ -1,6 +1,9 @@
 package LearnToRank;
 
 import java.io.File;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.queryparser.classic.QueryParser;
 import org.apache.lucene.store.Directory;
@@ -36,14 +39,40 @@ public class Explainer {
         IndexReader reader = DirectoryReader.open(directory);
         IndexSearcher searcher = new IndexSearcher(reader);
         TopDocs topDocs = searcher.search(query, 100);
-        for (ScoreDoc match : topDocs.scoreDocs) {
-            Explanation explanation
-                    = searcher.explain(query, match.doc);
-            System.out.println("----------");
-            Document doc = searcher.doc(match.doc);
-            System.out.println(doc.getField("title"));
-            System.out.println(explanation.toHtml());
+
+        try {
+
+            String content = "";
+            String content0 = "";
+
+            File file = new File("/users/Photeinis/Documents/features.txt");
+
+            if (!file.exists()) {
+                file.createNewFile();
+            }
+
+            FileWriter fw = new FileWriter(file.getAbsoluteFile());
+            BufferedWriter bw = new BufferedWriter(fw);
+
+            for (ScoreDoc match : topDocs.scoreDocs) {
+                Explanation explanation
+                        = searcher.explain(query, match.doc);
+                System.out.println("----------");
+                Document doc = searcher.doc(match.doc);
+                System.out.println(explanation.toHtml());
+                content = explanation.toHtml();
+                DocInfo docInfo = new DocInfo(content);
+                content0 += docInfo.toString();
+            }
+
+            bw.write(content0);
+            bw.close();
+
+        } catch (IOException e) {
+            e.printStackTrace();
         }
+
+
         directory.close();
     }
 }
