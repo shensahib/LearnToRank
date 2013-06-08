@@ -12,9 +12,9 @@ import java.util.regex.Pattern;
  */
 public class DocInfo {
 
+    private int rank;
     private int id;
     private float idf;
-    private float queryNorm;
     private float tf;
     private float fieldNorm;
 
@@ -63,21 +63,6 @@ public class DocInfo {
         }
     }
 
-    public static float parseQueryNorm(String input){
-        Pattern p = Pattern.compile("\\d.* = queryNorm");
-        // get a matcher object
-        Matcher m = p.matcher(input);
-
-        if (m.find())
-        {
-            String str = m.group();
-            str = str.replace(" = queryNorm","");
-            return Float.valueOf(str);
-        } else {
-            return -1;
-        }
-    }
-
     public static float parseFieldNorm(String input){
         Pattern p = Pattern.compile("\\d.* = fieldNorm");
         // get a matcher object
@@ -93,18 +78,33 @@ public class DocInfo {
         }
     }
 
+    private int Rank() {
+        float score = score();
+        if (score >= 0.15){
+            rank = 4;
+        } else if (score >= 0.11) {
+            rank = 3;
+        } else if (score >= 0.08){
+            rank = 2;
+        } else if (score >= 0.05){
+            rank = 1;
+        } else {
+            rank = 0;
+        }
+        return rank;
+    }
+
     public  DocInfo (String info){
         this.id = parseID(info);
         this.idf = parseIDF(info);
-        this.queryNorm = parseQueryNorm(info);
         this.tf = parseTF(info);
         this.fieldNorm = parseFieldNorm(info);
+        this.rank = Rank();
     }
 
-    public DocInfo (int Id, float Idf, float QueryNorm, float Tf, float FieldNorm){
+    public DocInfo (int Id, float Idf, float Tf, float FieldNorm){
         this.id = Id;
         this.idf = Idf;
-        this.queryNorm = QueryNorm;
         this.tf = Tf;
         this.fieldNorm = FieldNorm;
     }
@@ -113,24 +113,20 @@ public class DocInfo {
         return id;
     }
 
-    public float queryWeight() {
-        return idf * queryNorm;
-    }
-
     public float fieldWeight() {
         return tf * idf * fieldNorm;
     }
 
     public float score() {
-        return queryWeight() * fieldWeight();
+        return fieldWeight();
     }
 
     public String toString() {
-        String line = String.valueOf(id) + " qid:1" +
+        String line = Integer.toString(rank) + " qid:1" +
                 " 1:" + String.valueOf(idf) +
-                " 2:" + String.valueOf(queryNorm) +
-                " 3:" + String.valueOf(tf) +
-                " 4:" + String.valueOf(fieldNorm) + "\n";
+                " 2:" + String.valueOf(tf) +
+                " 3:" + String.valueOf(fieldNorm) +
+                " #" + String.valueOf(id) + "\n";
 
         return line;
     }

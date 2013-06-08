@@ -45,7 +45,7 @@ public class Explainer {
             String content = "";
             String content0 = "";
 
-            File file = new File("/users/Photeinis/Documents/features.txt");
+            File file = new File("/users/Photeinis/Downloads/CS290n/f_"+queryExpression+".txt");
 
             if (!file.exists()) {
                 file.createNewFile();
@@ -59,10 +59,10 @@ public class Explainer {
                         = searcher.explain(query, match.doc);
                 System.out.println("----------");
                 Document doc = searcher.doc(match.doc);
-                System.out.println(explanation.toHtml());
-                content = explanation.toHtml();
+                content = explanation.toString();
                 DocInfo docInfo = new DocInfo(content);
                 content0 += docInfo.toString();
+                System.out.println(content);
             }
 
             bw.write(content0);
