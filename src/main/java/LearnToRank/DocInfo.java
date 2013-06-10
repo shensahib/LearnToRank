@@ -126,7 +126,7 @@ public class DocInfo {
                 " 1:" + String.valueOf(idf) +
                 " 2:" + String.valueOf(tf) +
                 " 3:" + String.valueOf(fieldNorm) +
-                " #" + String.valueOf(id) + "\n";
+                " #" + String.valueOf(id) + " score:" + score() + "\n";
 
         return line;
     }

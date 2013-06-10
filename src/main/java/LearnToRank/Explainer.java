@@ -59,7 +59,7 @@ public class Explainer {
                         = searcher.explain(query, match.doc);
                 System.out.println("----------");
                 Document doc = searcher.doc(match.doc);
-                content = explanation.toString();
+                content = explanation.toHtml();
                 DocInfo docInfo = new DocInfo(content);
                 content0 += docInfo.toString();
                 System.out.println(content);
