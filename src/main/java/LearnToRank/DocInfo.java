@@ -17,6 +17,7 @@ public class DocInfo {
     private float idf;
     private float tf;
     private float fieldNorm;
+    private int qid;
 
     public static int parseID(String input){
         Pattern p = Pattern.compile("doc=\\d*");
@@ -94,12 +95,13 @@ public class DocInfo {
         return rank;
     }
 
-    public  DocInfo (String info){
+    public  DocInfo (String info, int Qid){
         this.id = parseID(info);
         this.idf = parseIDF(info);
         this.tf = parseTF(info);
         this.fieldNorm = parseFieldNorm(info);
         this.rank = Rank();
+        this.qid = Qid;
     }
 
     public DocInfo (int Id, float Idf, float Tf, float FieldNorm){
@@ -122,7 +124,7 @@ public class DocInfo {
     }
 
     public String toString() {
-        String line = Integer.toString(rank) + " qid:1" +
+        String line = Integer.toString(rank) + " qid:" + qid +
                 " 1:" + String.valueOf(idf) +
                 " 2:" + String.valueOf(tf) +
                 " 3:" + String.valueOf(fieldNorm) +

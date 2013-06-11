@@ -1,5 +1,7 @@
 package LearnToRank;
 
+import java.util.ArrayList;
+import java.util.LinkedList;
 import java.io.File;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
@@ -25,34 +27,41 @@ import org.apache.lucene.analysis.core.SimpleAnalyzer;
  */
 public class Explainer {
     public static void main(String[] args) throws Exception {
-        if (args.length != 2) {
-            System.err.println("Usage: Explainer <index dir> <query>");
+        if (args.length != 1) {
+            System.err.println("Usage: Explainer <index dir>");
             System.exit(1);
         }
         String indexDir = args[0];
-        String queryExpression = args[1];
+        ArrayList<String> queryExpressions = new ArrayList<String>();
+        queryExpressions.add("computer");
+        queryExpressions.add("database");
+        queryExpressions.add("wireless");
+
+        String content = "";
+        String content0 = "";
+
+        File file = new File("/users/Photeinis/Downloads/CS290n/f_features.txt");
+        if (!file.exists()) {
+            file.createNewFile();
+        }
+
+        FileWriter fw = new FileWriter(file.getAbsoluteFile());
+        BufferedWriter bw = new BufferedWriter(fw);
+
         Directory directory = FSDirectory.open(new File(indexDir));
         QueryParser parser = new QueryParser(Version.LUCENE_43,
                 "contents", new SimpleAnalyzer(Version.LUCENE_43));
-        Query query = parser.parse(queryExpression);
-        System.out.println("Query: " + queryExpression);
-        IndexReader reader = DirectoryReader.open(directory);
-        IndexSearcher searcher = new IndexSearcher(reader);
-        TopDocs topDocs = searcher.search(query, 100);
 
-        try {
+        int qid = 0;
 
-            String content = "";
-            String content0 = "";
+        for (String queryExpression: queryExpressions){
 
-            File file = new File("/users/Photeinis/Downloads/CS290n/f_"+queryExpression+".txt");
-
-            if (!file.exists()) {
-                file.createNewFile();
-            }
-
-            FileWriter fw = new FileWriter(file.getAbsoluteFile());
-            BufferedWriter bw = new BufferedWriter(fw);
+            qid++;
+            Query query = parser.parse(queryExpression);
+            System.out.println("Query: " + queryExpression);
+            IndexReader reader = DirectoryReader.open(directory);
+            IndexSearcher searcher = new IndexSearcher(reader);
+            TopDocs topDocs = searcher.search(query, 10);
 
             for (ScoreDoc match : topDocs.scoreDocs) {
                 Explanation explanation
@@ -60,19 +69,14 @@ public class Explainer {
                 System.out.println("----------");
                 Document doc = searcher.doc(match.doc);
                 content = explanation.toHtml();
-                DocInfo docInfo = new DocInfo(content);
+                DocInfo docInfo = new DocInfo(content, qid);
                 content0 += docInfo.toString();
                 System.out.println(content);
             }
-
-            bw.write(content0);
-            bw.close();
-
-        } catch (IOException e) {
-            e.printStackTrace();
         }
 
-
+        bw.write(content0);
+        bw.close();
         directory.close();
     }
 }
