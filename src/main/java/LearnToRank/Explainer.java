@@ -1,11 +1,9 @@
 package LearnToRank;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.io.File;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
-import java.io.IOException;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.queryparser.classic.QueryParser;
 import org.apache.lucene.store.Directory;
@@ -20,7 +18,6 @@ import org.apache.lucene.search.ScoreDoc;
 import org.apache.lucene.util.Version;
 import org.apache.lucene.analysis.core.SimpleAnalyzer;
 
-
 /**
  * Hello world!
  *
@@ -33,9 +30,21 @@ public class Explainer {
         }
         String indexDir = args[0];
         ArrayList<String> queryExpressions = new ArrayList<String>();
-        queryExpressions.add("computer");
-        queryExpressions.add("database");
-        queryExpressions.add("wireless");
+        String[] queryArray = new String[]{
+                "computer science",                "santa barbara",                "database",                "wireless",                "distributed",
+                "cryptography",                "dynamics",                "defense",                "visualization",                "robotics",
+                "computational neuroscience",                "natural language processing",                "software engineering",                "computer vision",                "grid computing",
+                "animation",                "virtual reality",                "knowledge representation",                "medical image",                "cognitive science",
+                "set theory",                "graph theory",                "san diego",                "cambridge university",                "microsoft",
+                "combinatorics",                "game theory",                "numerical analysis",                "Lie theory",                "gaussian elimination",
+                "strong interaction",                  "Electromagnetism",                "quantum optics",                "acoustics",                "Relativity",
+                "particle physics",                "nonlinear",                 "sub-linear",                "asteroid",                "solar"
+
+        };
+
+        for (int i = 0; i < queryArray.length; i++ ){
+            queryExpressions.add(queryArray[i]);
+        }
 
         String content = "";
         String content0 = "";

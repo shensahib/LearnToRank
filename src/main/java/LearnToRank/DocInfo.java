@@ -81,16 +81,16 @@ public class DocInfo {
 
     private int Rank() {
         float score = score();
-        if (score >= 0.15){
+        if (score >= 1){
+            rank = 5;
+        } else if (score >= 0.75) {
             rank = 4;
-        } else if (score >= 0.11) {
+        } else if (score >= 0.5){
             rank = 3;
-        } else if (score >= 0.08){
+        } else if (score >= 0.25){
             rank = 2;
-        } else if (score >= 0.05){
-            rank = 1;
         } else {
-            rank = 0;
+            rank = 1;
         }
         return rank;
     }
