@@ -42,8 +42,12 @@ public class Explainer {
 
         };
 
-        for (int i = 0; i < queryArray.length; i++ ){
-            queryExpressions.add(queryArray[i]);
+        String[] queryArray2 = new String[]{
+            "stanford",            "harvard",                "biological",                "virus",                "catalyst"
+        };
+
+        for (int i = 0; i < queryArray2.length; i++ ){
+            queryExpressions.add(queryArray2[i]);
         }
 
         String content = "";

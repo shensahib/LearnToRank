@@ -2,7 +2,7 @@ package LearnToRank;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
+import java.util.Random;
 /**
  * Created with IntelliJ IDEA.
  * User: Photeinis
@@ -79,7 +79,11 @@ public class DocInfo {
         }
     }
 
-    private int Rank() {
+    private int Rank(boolean random) {
+        if (random){
+            rank =  (new Random()).nextInt(4-0);
+            return rank;
+        }
         float score = score();
         if (score >= 1){
             rank = 5;
@@ -100,7 +104,7 @@ public class DocInfo {
         this.idf = parseIDF(info);
         this.tf = parseTF(info);
         this.fieldNorm = parseFieldNorm(info);
-        this.rank = Rank();
+        this.rank = Rank(true);
         this.qid = Qid;
     }
 
